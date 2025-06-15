@@ -50,7 +50,7 @@
      # Using Python (if installed)
      python -m http.server 8000
      ```
-     Then visit `https://yashbardhan-portfolio.netlify.app/`
+     Then visit `http://localhost:8000`
 
 ## 🎨 Customization
 
@@ -97,9 +97,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📬 Contact
 
-Your Name - [@yourtwitter](https://twitter.com/yourtwitter) - your. gyash6759@gmail.com
+Your Name - [@yourtwitter](https://twitter.com/yourtwitter) - your.email@example.com
 
-Project Link: [https://github.com/yourusername/portfolio][([( https://yashbardhan-portfoli.netlify.app/ ))]
+Project Link: [https://github.com/yourusername/portfolio](https://github.com/yourusername/portfolio)
 
 ## 🙏 Acknowledgments
 

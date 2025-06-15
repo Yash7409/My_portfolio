@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Portfolio Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f3f4f6;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            transition: transform 0.3s ease;
+        }
+        .main-content {
+            margin-left: 250px;
+            transition: margin 0.3s ease;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
+        .message-card.unread {
+            border-left: 4px solid #3b82f6;
+        }
+    </style>
+</head>
+<body class="flex">
+    <!-- Sidebar -->
+    <div class="sidebar bg-gray-800 text-white">
+        <div class="p-4 border-b border-gray-700">
+            <h1 class="text-xl font-bold">Portfolio Admin</h1>
+            <p class="text-gray-400 text-sm">Welcome back, <span id="adminName">Admin</span></p>
+        </div>
+        <nav class="mt-4">
+            <a href="#" class="block py-2 px-4 bg-gray-700 text-white">
+                <i class="fas fa-envelope mr-2"></i> Messages
+            </a>
+            <a href="#" class="block py-2 px-4 text-gray-300 hover:bg-gray-700">
+                <i class="fas fa-cog mr-2"></i> Settings
+            </a>
+            <a href="#" id="logoutBtn" class="block py-2 px-4 text-gray-300 hover:bg-gray-700">
+                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content flex-1">
+        <!-- Top Nav -->
+        <header class="bg-white shadow-sm">
+            <div class="flex justify-between items-center p-4">
+                <button id="menuToggle" class="md:hidden text-gray-600">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <button class="text-gray-600 hover:text-gray-800">
+                            <i class="fas fa-bell text-xl"></i>
+                            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                        </button>
+                    </div>
+                    <div class="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center">
+                        <i class="fas fa-user text-gray-600"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Messages</h2>
+                <div class="flex space-x-2">
+                    <button id="markAllReadBtn" class="px-4 py-2 bg-blue-100 text-blue-600 rounded-md hover:bg-blue-200">
+                        Mark All as Read
+                    </button>
+                    <button id="refreshBtn" class="p-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Messages List -->
+            <div id="messagesList" class="space-y-4">
+                <!-- Messages will be loaded here -->
+                <div class="text-center py-8">
+                    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+                    <p class="mt-2 text-gray-600">Loading messages...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Message Detail Modal -->
+    <div id="messageModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] flex flex-col">
+            <div class="p-4 border-b flex justify-between items-center">
+                <h3 class="text-lg font-medium" id="messageSubject">Subject</h3>
+                <button id="closeModal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-1">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <p class="font-medium" id="messageFrom">From: </p>
+                        <p class="text-sm text-gray-500" id="messageDate">Date: </p>
+                    </div>
+                    <div class="space-x-2">
+                        <button class="p-2 text-gray-500 hover:bg-gray-100 rounded-full">
+                            <i class="fas fa-reply"></i>
+                        </button>
+                        <button class="p-2 text-red-500 hover:bg-red-50 rounded-full">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="prose max-w-none" id="messageContent">
+                    <!-- Message content will be inserted here -->
+                </div>
+            </div>
+            <div class="p-4 border-t flex justify-end space-x-2">
+                <button id="replyBtn" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                    Reply
+                </button>
+                <button id="closeModalBtn" class="px-4 py-2 border rounded-md hover:bg-gray-50">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auth check
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+
+        // DOM Elements
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.querySelector('.sidebar');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const messagesList = document.getElementById('messagesList');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const markAllReadBtn = document.getElementById('markAllReadBtn');
+        const messageModal = document.getElementById('messageModal');
+        const closeModal = document.getElementById('closeModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const messageSubject = document.getElementById('messageSubject');
+        const messageFrom = document.getElementById('messageFrom');
+        const messageDate = document.getElementById('messageDate');
+        const messageContent = document.getElementById('messageContent');
+        const replyBtn = document.getElementById('replyBtn');
+
+        // Toggle mobile menu
+        menuToggle?.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        // Logout
+        logoutBtn?.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        });
+
+        // Close modal
+        const closeMessageModal = () => {
+            messageModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        };
+
+        closeModal?.addEventListener('click', closeMessageModal);
+        closeModalBtn?.addEventListener('click', closeMessageModal);
+
+        // Load messages
+        const loadMessages = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/messages', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load messages');
+                }
+
+                const { data } = await response.json();
+                
+                if (data.length === 0) {
+                    messagesList.innerHTML = `
+                        <div class="text-center py-12">
+                            <i class="fas fa-inbox text-4xl text-gray-300 mb-4"></i>
+                            <p class="text-gray-500">No messages found</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                messagesList.innerHTML = data.map(message => `
+                    <div class="bg-white rounded-lg shadow-sm border p-4 hover:shadow-md transition-shadow cursor-pointer message-card ${!message.read ? 'unread' : ''}" 
+                         data-id="${message._id}"
+                         data-read="${message.read}">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-medium text-gray-900 truncate">${message.name} &lt;${message.email}&gt;</h3>
+                                <p class="text-sm text-gray-600 truncate">${message.subject}</p>
+                                <p class="text-sm text-gray-500 mt-1 line-clamp-2">${message.message}</p>
+                            </div>
+                            <div class="ml-4 flex-shrink-0">
+                                <span class="text-xs text-gray-400">${new Date(message.createdAt).toLocaleDateString()}</span>
+                                ${!message.read ? '<span class="ml-2 inline-block h-2 w-2 rounded-full bg-blue-500"></span>' : ''}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Add click event to message cards
+                document.querySelectorAll('.message-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const messageId = card.getAttribute('data-id');
+                        const isRead = card.getAttribute('data-read') === 'true';
+                        showMessageDetails(messageId, isRead);
+                    });
+                });
+
+            } catch (error) {
+                console.error('Error loading messages:', error);
+                messagesList.innerHTML = `
+                    <div class="bg-red-50 border-l-4 border-red-400 p-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-exclamation-circle text-red-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-red-700">
+                                    ${error.message || 'Failed to load messages. Please try again.'}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        };
+
+        // Show message details
+        const showMessageDetails = async (messageId, isRead) => {
+            try {
+                const response = await fetch(`http://localhost:5000/api/messages/${messageId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load message');
+                }
+
+                const { data: message } = await response.json();
+                
+                // Update modal content
+                messageSubject.textContent = message.subject;
+                messageFrom.textContent = `From: ${message.name} <${message.email}>`;
+                messageDate.textContent = `Date: ${new Date(message.createdAt).toLocaleString()}`;
+                messageContent.textContent = message.message;
+
+                // Mark as read if unread
+                if (!isRead) {
+                    await fetch(`http://localhost:5000/api/messages/${messageId}/read`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    // Update UI
+                    const messageCard = document.querySelector(`.message-card[data-id="${messageId}"]`);
+                    if (messageCard) {
+                        messageCard.classList.remove('unread');
+                        messageCard.setAttribute('data-read', 'true');
+                        const unreadDot = messageCard.querySelector('.bg-blue-500');
+                        if (unreadDot) unreadDot.remove();
+                    }
+                }
+
+                // Show modal
+                messageModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+
+            } catch (error) {
+                console.error('Error loading message:', error);
+                alert('Failed to load message. Please try again.');
+            }
+        };
+
+        // Mark all as read
+        const markAllAsRead = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/messages/mark-all-read', {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to mark messages as read');
+                }
+
+                // Update UI
+                document.querySelectorAll('.message-card').forEach(card => {
+                    card.classList.remove('unread');
+                    card.setAttribute('data-read', 'true');
+                    const unreadDot = card.querySelector('.bg-blue-500');
+                    if (unreadDot) unreadDot.remove();
+                });
+
+            } catch (error) {
+                console.error('Error marking messages as read:', error);
+                alert('Failed to mark messages as read. Please try again.');
+            }
+        };
+
+        // Event Listeners
+        refreshBtn?.addEventListener('click', loadMessages);
+        markAllReadBtn?.addEventListener('click', markAllAsRead);
+
+        // Load messages on page load
+        document.addEventListener('DOMContentLoaded', loadMessages);
+
+        // Check auth on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/me', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Not authenticated');
+                }
+
+                const { data: user } = await response.json();
+                document.getElementById('adminName').textContent = user.username;
+
+            } catch (error) {
+                console.error('Auth check failed:', error);
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+</body>
+</html>
