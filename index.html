@@ -228,6 +228,65 @@
     
     <!-- Navigation -->
     <nav class="fixed w-full z-50 transition-all duration-500" id="navbar">
+        <!-- Add JavaScript for Dark Mode and Mobile Menu -->
+        <script>
+            // Dark Mode Toggle
+            document.addEventListener('DOMContentLoaded', function() {
+                const themeToggle = document.getElementById('themeToggle');
+                const html = document.documentElement;
+
+                // Check if dark mode is saved in localStorage
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme) {
+                    html.classList.toggle('dark', savedTheme === 'dark');
+                }
+
+                themeToggle.addEventListener('click', function() {
+                    html.classList.toggle('dark');
+                    const currentTheme = html.classList.contains('dark') ? 'dark' : 'light';
+                    localStorage.setItem('theme', currentTheme);
+                    
+                    // Update icon
+                    const icon = this.querySelector('i');
+                    if (currentTheme === 'dark') {
+                        icon.classList.remove('fa-moon');
+                        icon.classList.add('fa-sun');
+                    } else {
+                        icon.classList.remove('fa-sun');
+                        icon.classList.add('fa-moon');
+                    }
+                });
+            });
+
+            // Mobile Menu Toggle
+            document.addEventListener('DOMContentLoaded', function() {
+                const mobileMenuButton = document.getElementById('mobileMenuButton');
+                const mobileMenu = document.getElementById('mobileMenu');
+
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                    
+                    // Update icon
+                    const icon = this.querySelector('i');
+                    if (mobileMenu.classList.contains('hidden')) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    } else {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    }
+                });
+
+                // Close mobile menu when clicking outside
+                document.addEventListener('click', function(event) {
+                    if (!mobileMenu.contains(event.target) && !mobileMenuButton.contains(event.target)) {
+                        mobileMenu.classList.add('hidden');
+                        mobileMenuButton.querySelector('i').classList.remove('fa-times');
+                        mobileMenuButton.querySelector('i').classList.add('fa-bars');
+                    }
+                });
+            });
+        </script>
         <div class="absolute inset-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg shadow-lg -z-10 transition-all duration-500" id="nav-bg"></div>
         <div class="container mx-auto px-6 py-3">
             <div class="flex justify-between items-center">
@@ -476,13 +535,13 @@
                     <p class="mb-8">I'm a passionate web developer with expertise in creating modern, responsive, and user-friendly websites. With a strong foundation in HTML, CSS, and JavaScript, I bring ideas to life through clean code and innovative solutions.</p>
                     <div class="skills-grid grid grid-cols-2 gap-6">
                         <div class="skill-item">
-                            <h3>HTML5</h3>
+                            <h3>HTML</h3>
                             <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
                                 <div class="bg-blue-600 dark:bg-blue-400 h-2.5 rounded-full" style="width: 95%"></div>
                             </div>
                         </div>
                         <div class="skill-item">
-                            <h3>CSS3</h3>
+                            <h3>CSS</h3>
                             <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
                                 <div class="bg-blue-600 dark:bg-blue-400 h-2.5 rounded-full" style="width: 90%"></div>
                             </div>
@@ -494,7 +553,7 @@
                             </div>
                         </div>
                         <div class="skill-item">
-                            <h3>React</h3>
+                            <h3>MySQL</h3>
                             <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
                                 <div class="bg-blue-600 dark:bg-blue-400 h-2.5 rounded-full" style="width: 80%"></div>
                             </div>
@@ -645,7 +704,7 @@
                     <div class="h-full bg-gray-800/50 backdrop-blur-md rounded-2xl overflow-hidden border border-gray-700/50 hover:border-blue-500/30 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/10">
                         <div class="relative overflow-hidden h-56">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
-                            <img src="https://images.unsplash.com/photo-1551288049-0e4fd4f76296?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" 
+                            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" 
                                  alt="AI Image Generator" 
                                  class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                             <div class="absolute bottom-0 left-0 right-0 p-6 z-20">
@@ -693,9 +752,9 @@
                 </div>
             </div>
 
-            <!-- View More Button -->
+            <!-- View All Projects Button -->
             <div class="text-center mt-12">
-                <a href="#" class="inline-flex items-center px-6 py-3 border-2 border-blue-500 text-blue-400 font-medium rounded-full hover:bg-blue-500/10 hover:text-white transition-all duration-300 group">
+                <a href="https://github.com/Yash7409" target="_blank" class="inline-flex items-center px-6 py-3 border-2 border-blue-500 text-blue-400 font-medium rounded-full hover:bg-blue-500/10 hover:text-white transition-all duration-300 group">
                     <span>View All Projects</span>
                     <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
@@ -1168,7 +1227,7 @@
                                         <p class="text-blue-600 dark:text-blue-400 font-medium">Tech Solutions Inc.</p>
                                     </div>
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
-                                        <i class="far fa-calendar-alt mr-1"></i> 2021 - Present
+                                        <i class="far fa-calendar-alt mr-1"></i> 2025 - Present
                                     </span>
                                 </div>
                                 <p class="mt-3 text-gray-600 dark:text-gray-300">
@@ -1193,7 +1252,7 @@
                                         <p class="text-purple-600 dark:text-purple-400 font-medium">Digital Creations</p>
                                     </div>
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300">
-                                        <i class="far fa-calendar-alt mr-1"></i> 2019 - 2021
+                                        <i class="far fa-calendar-alt mr-1"></i> 2023 - 2025
                                     </span>
                                 </div>
                                 <p class="mt-3 text-gray-600 dark:text-gray-300">
@@ -1224,69 +1283,16 @@
                             </div>
                             
                             <!-- Degree Info -->
-                            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Master's in Computer Science</h3>
-                            <p class="text-blue-600 dark:text-blue-400 font-medium mb-4">Tech University</p>
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Bachelor of Technology in Computer Science</h3>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4">Computer Science Engineering</p>
+                            <p class="text-blue-600 dark:text-blue-400 font-medium mb-4">Sanskriti University</p>
                             
                             <!-- Duration -->
-                            <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4">
-                                <i class="far fa-calendar-alt mr-2"></i>
-                                <span>2017 - 2019</span>
-                            </div>
                             
-                            <!-- Description -->
-                            <p class="text-gray-600 dark:text-gray-300 mb-6">
-                                Specialized in Artificial Intelligence and Machine Learning with a focus on neural networks and deep learning applications.
-                            </p>
-                            
-                            <!-- Achievements -->
-                            <div class="space-y-2">
-                                <div class="flex items-start">
-                                    <i class="fas fa-check-circle text-blue-500 mt-1 mr-2"></i>
-                                    <span class="text-sm text-gray-700 dark:text-gray-300">Thesis on Advanced Neural Network Architectures</span>
-                                </div>
-                                <div class="flex items-start">
-                                    <i class="fas fa-check-circle text-blue-500 mt-1 mr-2"></i>
-                                    <span class="text-sm text-gray-700 dark:text-gray-300">Graduated with Honors (GPA: 3.8/4.0)</span>
-                                </div>
-                            </div>
                         </div>
-                        
+
                         <!-- Education Card 2 -->
-                        <div class="group relative bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-500 hover:-translate-y-1 border border-purple-100 dark:border-gray-700 overflow-hidden">
-                            <!-- Decorative Element -->
-                            <div class="absolute top-0 right-0 w-32 h-32 bg-purple-200/30 dark:bg-purple-900/20 rounded-full -mr-16 -mt-16"></div>
-                            
-                            <!-- Degree Icon -->
-                            <div class="w-16 h-16 bg-purple-100 dark:bg-purple-900/30 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-purple-200 dark:group-hover:bg-purple-800/40 transition-colors">
-                                <i class="fas fa-laptop-code text-2xl text-purple-600 dark:text-purple-400"></i>
-                            </div>
-                            
-                            <!-- Degree Info -->
-                            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Bachelor's in Software Engineering</h3>
-                            <p class="text-purple-600 dark:text-purple-400 font-medium mb-4">State University</p>
-                            
-                            <!-- Duration -->
-                            <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4">
-                                <i class="far fa-calendar-alt mr-2"></i>
-                                <span>2013 - 2017</span>
-                            </div>
-                            
-                            <!-- Description -->
-                            <p class="text-gray-600 dark:text-gray-300 mb-6">
-                                Focused on software development principles, algorithms, and web technologies. Active in coding competitions and tech communities.
-                            </p>
-                            
-                            <!-- Achievements -->
-                            <div class="space-y-2">
-                                <div class="flex items-start">
-                                    <i class="fas fa-trophy text-yellow-500 mt-1 mr-2"></i>
-                                    <span class="text-sm text-gray-700 dark:text-gray-300">1st Place in National Coding Competition</span>
-                                </div>
-                                <div class="flex items-start">
-                                    <i class="fas fa-project-diagram text-purple-500 mt-1 mr-2"></i>
-                                    <span class="text-sm text-gray-700 dark:text-gray-300">Led University Tech Club as President</span>
-                                </div>
-                            </div>
+                        
                         </div>
                     </div>
                 </div>
@@ -1455,7 +1461,7 @@
 
                 <!-- Download Button -->
                 <div class="mt-12 text-center">
-                    <a href="#" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium rounded-full hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300 transform hover:-translate-y-1">
+                    <a href="yashbardhan resume.pdf" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium rounded-full hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300 transform hover:-translate-y-1">
                         <i class="fas fa-download mr-2"></i>
                         Download Full Resume
                     </a>
@@ -1510,22 +1516,28 @@
                 to { opacity: 1; transform: translateY(0); }
             }
         </style>
-                            <h3 class="text-2xl font-bold">Yashbardhan Gautam</h3>
-                            <p class="text-blue-600 dark:text-blue-400">AI & ML Enthusiast | Web Developer</p>
+                        
                         </div>
-                        <a href="Y:\ai\yashbardhan resume.pdf" download="Yashbardhan_Gautam_Resume.pdf" class="mt-4 md:mt-0 bg-blue-600 text-white px-6 py-2 rounded-full font-medium hover:bg-blue-700 transition duration-300 flex items-center">
-                            <i class="fas fa-download mr-2"></i> Download PDF
-                        </a>
+
                     </div>
 
-                    <div class="grid md:grid-cols-2 gap-8">
+                    <div class="max-w-3xl mx-auto">
+                        <div class="text-center mb-12">
+                            <h2 class="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                Yashbardhan Gautam
+                            </h2>
+                            <p class="text-xl md:text-2xl font-semibold text-blue-600 dark:text-blue-400 mt-2">
+                                AI & ML Enthusiast | Web Developer
+                            </p>
+                        </div>
+
                         <!-- Education -->
-                        <div>
-                            <h4 class="text-xl font-semibold mb-4 flex items-center">
+                        <div class="mb-12">
+                            <h4 class="text-xl font-semibold mb-4 flex items-center justify-center">
                                 <i class="fas fa-graduation-cap text-blue-600 mr-2"></i> Education
                             </h4>
-                            <div class="border-l-2 border-blue-600 pl-4 space-y-6">
-                                <div>
+                            <div class="space-y-6">
+                                <div class="border-l-2 border-blue-600 pl-4">
                                     <h5 class="font-semibold">B.Tech Computer Science (AI&ML)</h5>
                                     <p class="text-gray-600 dark:text-gray-300">Sanskriti University</p>
                                     <p class="text-sm text-gray-500 dark:text-gray-400">2023 - 2027</p>
@@ -1534,8 +1546,8 @@
                         </div>
 
                         <!-- Skills -->
-                        <div>
-                            <h4 class="text-xl font-semibold mb-4 flex items-center">
+                        <div class="mb-12">
+                            <h4 class="text-xl font-semibold mb-4 flex items-center justify-center">
                                 <i class="fas fa-code text-blue-600 mr-2"></i> Technical Skills
                             </h4>
                             <div class="space-y-3">
@@ -1775,7 +1787,7 @@
                 <!-- Blog Post 1: AI -->
                 <article class="group bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100 dark:border-gray-700">
                     <div class="relative overflow-hidden h-56">
-                        <img src="https://images.unsplash.com/photo-1677442135136-760c50d521d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                        <img src="https://images.unsplash.com/photo-1593642532400-2682810df593?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
                              alt="AI Advancements in 2023" 
                              class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
@@ -1801,7 +1813,7 @@
                                 <img src="../PXL_20240420_120116633.PORTRAIT-01.jpeg" alt="Author" class="w-8 h-8 rounded-full mr-3">
                                 <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Yashbardhan Gautam</span>
                             </div>
-                            <a href="#" class="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 font-medium inline-flex items-center group-hover:translate-x-1 transition-transform">
+                            <a href="blog/ai-breakthroughs-2023.html" class="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 font-medium inline-flex items-center group-hover:translate-x-1 transition-transform">
                                 Read More
                                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -1840,7 +1852,7 @@
                                 <img src="../PXL_20240420_120116633.PORTRAIT-01.jpeg" alt="Author" class="w-8 h-8 rounded-full mr-3">
                                 <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Yashbardhan Gautam</span>
                             </div>
-                            <a href="#" class="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 font-medium inline-flex items-center group-hover:translate-x-1 transition-transform">
+                            <a href="blog/web-dev-2023.html" class="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 font-medium inline-flex items-center group-hover:translate-x-1 transition-transform">
                                 Read More
                                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -1879,7 +1891,7 @@
                                 <img src="../PXL_20240420_120116633.PORTRAIT-01.jpeg" alt="Author" class="w-8 h-8 rounded-full mr-3">
                                 <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Yashbardhan Gautam</span>
                             </div>
-                            <a href="#" class="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 font-medium inline-flex items-center group-hover:translate-x-1 transition-transform">
+                            <a href="blog/data-science-2023.html" class="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 font-medium inline-flex items-center group-hover:translate-x-1 transition-transform">
                                 Read More
                                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -1895,7 +1907,7 @@
                 <a href="blog/" class="inline-flex items-center px-6 py-3 border-2 border-blue-500 text-blue-600 dark:text-blue-400 font-medium rounded-full hover:bg-blue-500/10 hover:text-blue-700 dark:hover:text-blue-300 transition-all duration-300 group">
                     View All Articles
                     <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
                 </a>
             </div>
