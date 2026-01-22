@@ -37,13 +37,7 @@
 
 ### Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/portfolio.git
-   cd portfolio
-   ```
-
-2. **Open in browser**
+1. **Open in browser**
    - Simply open `index.html` in your preferred web browser
    - Or use a local server (recommended):
      ```bash
